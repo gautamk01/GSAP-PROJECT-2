@@ -121,3 +121,93 @@ section {
     width: 100%;
   }
 }
+
+/* Slide Spacer - Provides scroll distance */
+.slide-spacer {
+  height: 200svh;
+  background: linear-gradient(
+    180deg,
+    var(--base-200) 0%,
+    hsl(280, 60%, 85%) 100%
+  );
+}
+
+/* Slide Container - Fixed, Hidden Right initially */
+.slide-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100svh;
+  pointer-events: none;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  
+  /* Initial State: Off-screen Right */
+  transform: translateX(100%);
+  will-change: transform;
+}
+
+/* Duck leads the text (Left side of flex container) */
+.slide-duck {
+  position: relative;
+  width: 12rem;
+  height: 12rem;
+  flex-shrink: 0;
+  /* Make duck face left (since it's pulling from right) */
+  /* If default duck faces right, rotateY(180deg) makes it face left */
+  /* transformations handled in JS usually, but set base here */
+}
+
+/* Text follows (Right side of flex container) */
+.slide-content {
+  max-width: 500px;
+  padding: 3rem 2.5rem;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(20px);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 2rem;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+}
+
+.slide-content h2 {
+  font-size: clamp(2.5rem, 4vw, 4rem);
+  font-weight: 900;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+  background: linear-gradient(135deg, hsl(280, 70%, 30%), hsl(320, 75%, 40%));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1.1;
+}
+
+.slide-content p {
+  font-size: clamp(1.2rem, 2vw, 1.5rem);
+  color: var(--base-300);
+  opacity: 0.85;
+  line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+  .slide-container {
+    flex-direction: column;
+    justify-content: center;
+    gap: 1rem;
+  }
+  
+  .slide-content {
+    max-width: 90%;
+    padding: 2rem;
+    text-align: center;
+  }
+  
+  .slide-duck {
+    width: 8rem;
+    height: 8rem;
+  }
+}
+
