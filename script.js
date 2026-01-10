@@ -87,18 +87,95 @@ ScrollTrigger.create({
 // ===== SINGLE DUCK SLIDE SECTION =====
 
 const slideContainer = document.querySelector(".slide-container");
-const slideDuck = document.querySelector(".slide-duck");
+const slidePopeye = document.querySelector(".slide-popeye");
 
-// Load single duck animation
-const slideDuckAnimation = lottie.loadAnimation({
-  container: slideDuck,
-  path: "/Duck.json",
+// Load Popeye Walking animation
+const slidePopeyeAnimation = lottie.loadAnimation({
+  container: slidePopeye,
+  path: "/Popeye Walking.json",
   renderer: "svg",
   autoplay: false,
 });
 
 ScrollTrigger.create({
   trigger: ".slide-spacer",
+  start: "top bottom",
+  end: "bottom top",
+  scrub: 1,
+  onUpdate: (self) => {
+    const progress = self.progress;
+
+    // 1. Fade In/Out Logic
+    // Quick fade in at start, quick fade out at end
+    const containerOpacity =
+      progress < 0.15
+        ? progress / 0.15
+        : progress > 0.85
+        ? (1 - progress) / 0.15
+        : 1;
+
+    // 2. Container Animation (Controls Text Position)
+    // Phase 1 (0 -> 0.5): Popeye and Text travel TOGETHER from right to center
+    // Phase 2 (0.5 -> 1.0): Container (Text) STAYS at center
+    let containerTranslateX;
+    if (progress < 0.5) {
+      // Both popeye and text slide from right to center together
+      containerTranslateX = 100 - (progress / 0.5) * 100;
+    } else {
+      // Container stays at center (text is now centered)
+      containerTranslateX = 0;
+    }
+
+    // 3. Popeye Independent Movement (Relative to Container)
+    // Phase 1 (0 -> 0.5): Popeye stays with container (no extra transform)
+    // Phase 2 (0.5 -> 1.0): Popeye continues left, moving off-screen
+    let popeyeExtraTranslateX;
+    if (progress < 0.5) {
+      // Popeye stays in place within the container (travels with it)
+      popeyeExtraTranslateX = 0;
+    } else {
+      // Popeye moves from its current position (in container) to far left
+      // In remaining 0.5 progress, move from 0 to -200vw (far off-screen)
+      const phaseProgress = (progress - 0.5) / 0.5;
+      popeyeExtraTranslateX = -phaseProgress * 200; // Move 200vw to the left
+    }
+
+    gsap.set(slideContainer, {
+      opacity: containerOpacity,
+      x: `${containerTranslateX}%`,
+    });
+
+    gsap.set(slidePopeye, {
+      x: `${popeyeExtraTranslateX}vw`, // Use vw for viewport-relative movement
+      rotateY: scrollDirection === "up" ? 180 : 0, // Popeye rotation (inverted to fix mirror image)
+    });
+
+    // 4. Popeye Lottie Animation Playback - MATCHING HERO SPEED
+    const scrollDistance = self.scroll() - self.start;
+    const pixelsPerFrame = 3;
+
+    const popeyeFrame =
+      Math.floor(scrollDistance / pixelsPerFrame) %
+      slidePopeyeAnimation.totalFrames;
+    slidePopeyeAnimation.goToAndStop(popeyeFrame, true);
+  },
+});
+
+// ===== MUSIC MAN SLIDE SECTION =====
+
+const slideContainer2 = document.querySelector(".slide-container-2");
+const slideMusicMan = document.querySelector(".slide-musicman");
+
+// Load Music Man animation
+const slideMusicManAnimation = lottie.loadAnimation({
+  container: slideMusicMan,
+  path: "/Music Man.json",
+  renderer: "svg",
+  autoplay: false,
+});
+
+ScrollTrigger.create({
+  trigger: ".slide-spacer-2",
   start: "top bottom",
   end: "bottom top",
   scrub: 1,
@@ -114,48 +191,49 @@ ScrollTrigger.create({
         : 1;
 
     // 2. Container Animation (Controls Text Position)
-    // Phase 1 (0 -> 0.5): Duck and Text travel TOGETHER from right to center
+    // Phase 1 (0 -> 0.5): Music Man and Text travel TOGETHER from left to center
     // Phase 2 (0.5 -> 1.0): Container (Text) STAYS at center
     let containerTranslateX;
     if (progress < 0.5) {
-      // Both duck and text slide from right to center together
-      containerTranslateX = 100 - (progress / 0.5) * 100;
+      // Both music man and text slide from left to center together
+      // Start at -100% (left), move to 0% (center)
+      containerTranslateX = -100 + (progress / 0.5) * 100;
     } else {
       // Container stays at center (text is now centered)
       containerTranslateX = 0;
     }
 
-    gsap.set(slideContainer, {
+    // 3. Music Man Independent Movement (Relative to Container)
+    // Phase 1 (0 -> 0.5): Music Man stays with container (no extra transform)
+    // Phase 2 (0.5 -> 1.0): Music Man continues right, moving off-screen
+    let musicManExtraTranslateX;
+    if (progress < 0.5) {
+      // Music Man stays in place within the container (travels with it)
+      musicManExtraTranslateX = 0;
+    } else {
+      // Music Man moves from its current position (in container) to far right
+      // In remaining 0.5 progress, move from 0 to +200vw (far off-screen right)
+      const phaseProgress = (progress - 0.5) / 0.5;
+      musicManExtraTranslateX = phaseProgress * 200; // Move 200vw to the right
+    }
+
+    gsap.set(slideContainer2, {
       opacity: containerOpacity,
       x: `${containerTranslateX}%`,
     });
 
-    // 3. Duck Independent Movement (Relative to Container)
-    // Phase 1 (0 -> 0.5): Duck stays with container (no extra transform)
-    // Phase 2 (0.5 -> 1.0): Duck continues left, moving off-screen
-    let duckExtraTranslateX;
-    if (progress < 0.5) {
-      // Duck stays in place within the container (travels with it)
-      duckExtraTranslateX = 0;
-    } else {
-      // Duck moves from its current position (in container) to far left
-      // In remaining 0.5 progress, move from 0 to -200vw (far off-screen)
-      const phaseProgress = (progress - 0.5) / 0.5;
-      duckExtraTranslateX = -phaseProgress * 200; // Move 200vw to the left
-    }
-
-    gsap.set(slideDuck, {
-      x: `${duckExtraTranslateX}vw`, // Use vw for viewport-relative movement
-      rotateY: scrollDirection === "up" ? 0 : 180, // Duck rotation
+    gsap.set(slideMusicMan, {
+      x: `${musicManExtraTranslateX}vw`, // Use vw for viewport-relative movement
+      rotateY: scrollDirection === "up" ? 0 : 180, // Music Man rotation
     });
 
-    // 4. Duck Lottie Animation Playback - MATCHING HERO SPEED
+    // 4. Music Man Lottie Animation Playback - MATCHING HERO SPEED
     const scrollDistance = self.scroll() - self.start;
     const pixelsPerFrame = 3;
 
-    const frame =
+    const musicManFrame =
       Math.floor(scrollDistance / pixelsPerFrame) %
-      slideDuckAnimation.totalFrames;
-    slideDuckAnimation.goToAndStop(frame, true);
+      slideMusicManAnimation.totalFrames;
+    slideMusicManAnimation.goToAndStop(musicManFrame, true);
   },
 });
