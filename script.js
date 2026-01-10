@@ -105,7 +105,7 @@ ScrollTrigger.create({
   onUpdate: (self) => {
     const progress = self.progress;
 
-    // 1. Fade In Logic (No fade out - text stays visible)
+    // 1. Fade In Logic (fade-out controlled separately for sync)
     const containerOpacity = progress < 0.15 ? progress / 0.15 : 1;
 
     // 2. Container Animation (Controls Text Position)
@@ -134,10 +134,14 @@ ScrollTrigger.create({
       popeyeExtraTranslateX = -phaseProgress * 200; // Move 200vw to the left
     }
 
-    gsap.set(slideContainer, {
-      opacity: containerOpacity,
-      x: `${containerTranslateX}%`,
-    });
+    gsap.set(
+      slideContainer,
+      {
+        opacity: containerOpacity,
+        x: `${containerTranslateX}%`,
+      },
+      "+=0"
+    ); // Apply immediately but allow sync fade to override
 
     gsap.set(slidePopeye, {
       x: `${popeyeExtraTranslateX}vw`, // Use vw for viewport-relative movement
@@ -176,7 +180,7 @@ ScrollTrigger.create({
   onUpdate: (self) => {
     const progress = self.progress;
 
-    // 1. Fade In Logic (No fade out - text stays visible)
+    // 1. Fade In Logic (fade-out controlled separately for sync)
     const containerOpacity = progress < 0.15 ? progress / 0.15 : 1;
 
     // 2. Container Animation (Controls Text Position)
@@ -207,9 +211,8 @@ ScrollTrigger.create({
     }
 
     gsap.set(slideContainer2, {
-      opacity: containerOpacity,
       x: `${containerTranslateX}%`,
-    });
+    }); // Opacity controlled by synchronized fade
 
     gsap.set(slideMusicMan, {
       x: `${musicManExtraTranslateX}vw`, // Use vw for viewport-relative movement
@@ -224,5 +227,70 @@ ScrollTrigger.create({
       Math.floor(scrollDistance / pixelsPerFrame) %
       slideMusicManAnimation.totalFrames;
     slideMusicManAnimation.goToAndStop(musicManFrame, true);
+  },
+});
+
+// ===== SYNCHRONIZED FADE-OUT FOR BOTH TEXT SECTIONS =====
+// Fade out both Popeye and Music Man sections when Thank You approaches
+ScrollTrigger.create({
+  trigger: ".slide-spacer-3",
+  start: "top bottom", // Start when Thank You spacer enters viewport
+  end: "top center", // Complete fade by time Thank You reaches center
+  scrub: 1,
+  onUpdate: (self) => {
+    const fadeProgress = self.progress;
+    // Fade out both containers simultaneously and keep at 0
+    const fadeOpacity = fadeProgress >= 1 ? 0 : 1 - fadeProgress;
+
+    gsap.set([slideContainer, slideContainer2], {
+      opacity: fadeOpacity,
+    });
+  },
+});
+
+// ===== THANK YOU SECTION =====
+
+const slideContainer3 = document.querySelector(".slide-container-3");
+const slideTourists = document.querySelector(".slide-tourists");
+
+// Load Tourists by car animation
+const slideTouristsAnimation = lottie.loadAnimation({
+  container: slideTourists,
+  path: "/Tourists by car.json",
+  renderer: "svg",
+  autoplay: false,
+});
+
+ScrollTrigger.create({
+  trigger: ".slide-spacer-3",
+  start: "top bottom",
+  end: "bottom top",
+  scrub: 1,
+  onUpdate: (self) => {
+    const progress = self.progress;
+
+    console.log("Thank You Progress:", progress); // Debug
+
+    // 1. Fade In Logic
+    const containerOpacity = progress < 0.1 ? progress / 0.1 : 1;
+
+    // 2. Container Animation - Move from Left to Right and Exit
+    // Progress 0 -> 1.0: Slide from left (-100%) to right (200% - completely off-screen)
+    // This makes everything (text + animation) travel across and disappear
+    const containerTranslateX = -100 + progress * 300; // -100% to +200%
+
+    gsap.set(slideContainer3, {
+      opacity: containerOpacity,
+      x: `${containerTranslateX}%`,
+    });
+
+    // 3. Tourists Animation Playback - MATCHING HERO SPEED
+    const scrollDistance = self.scroll() - self.start;
+    const pixelsPerFrame = 3;
+
+    const touristsFrame =
+      Math.floor(scrollDistance / pixelsPerFrame) %
+      slideTouristsAnimation.totalFrames;
+    slideTouristsAnimation.goToAndStop(touristsFrame, true);
   },
 });
