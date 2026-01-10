@@ -105,14 +105,8 @@ ScrollTrigger.create({
   onUpdate: (self) => {
     const progress = self.progress;
 
-    // 1. Fade In/Out Logic
-    // Quick fade in at start, quick fade out at end
-    const containerOpacity =
-      progress < 0.15
-        ? progress / 0.15
-        : progress > 0.85
-        ? (1 - progress) / 0.15
-        : 1;
+    // 1. Fade In Logic (No fade out - text stays visible)
+    const containerOpacity = progress < 0.15 ? progress / 0.15 : 1;
 
     // 2. Container Animation (Controls Text Position)
     // Phase 1 (0 -> 0.5): Popeye and Text travel TOGETHER from right to center
@@ -182,13 +176,8 @@ ScrollTrigger.create({
   onUpdate: (self) => {
     const progress = self.progress;
 
-    // 1. Fade In/Out Logic
-    const containerOpacity =
-      progress < 0.15
-        ? progress / 0.15
-        : progress > 0.85
-        ? (1 - progress) / 0.15
-        : 1;
+    // 1. Fade In Logic (No fade out - text stays visible)
+    const containerOpacity = progress < 0.15 ? progress / 0.15 : 1;
 
     // 2. Container Animation (Controls Text Position)
     // Phase 1 (0 -> 0.5): Music Man and Text travel TOGETHER from left to center
@@ -224,7 +213,7 @@ ScrollTrigger.create({
 
     gsap.set(slideMusicMan, {
       x: `${musicManExtraTranslateX}vw`, // Use vw for viewport-relative movement
-      rotateY: scrollDirection === "up" ? 0 : 180, // Music Man rotation
+      rotateY: scrollDirection === "up" ? 180 : 0, // Music Man rotation (inverted to fix mirror image)
     });
 
     // 4. Music Man Lottie Animation Playback - MATCHING HERO SPEED
