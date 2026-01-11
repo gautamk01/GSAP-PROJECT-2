@@ -133,7 +133,7 @@ function Hero() {
           />
         </div>
         <div className="hero-img" ref={heroImgRef}>
-          <img src="/img/simple.jpg" alt="" />
+          <img src={`${import.meta.env.BASE_URL}img/simple.jpg`} alt="" />
         </div>
       </div>
     </>
