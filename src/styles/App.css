@@ -112,9 +112,30 @@ section {
   }
 
   .lottie-container .lottie {
+    width: 6rem;
+    height: 6rem;
+    transform: translateX(1rem);
+  }
+
+  .lottie-container .hero-img {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .about h1 {
+    width: 100%;
+    font-size: clamp(3rem, 10vw, 5rem);
+  }
+
+  .lottie-container {
+    padding: 1rem;
+  }
+
+  .lottie-container .lottie {
     width: 4rem;
     height: 4rem;
-    transform: translateX(1rem);
+    transform: translateX(0.5rem);
   }
 
   .lottie-container .hero-img {
@@ -196,6 +217,7 @@ section {
     flex-direction: column;
     justify-content: center;
     gap: 1rem;
+    top: 0;
   }
 
   .slide-content {
@@ -207,6 +229,32 @@ section {
   .slide-popeye {
     width: 8rem;
     height: 8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .slide-container {
+    gap: 0.5rem;
+    padding: 1rem;
+  }
+
+  .slide-content {
+    max-width: 95%;
+    padding: 1.5rem;
+  }
+
+  .slide-content h2 {
+    font-size: clamp(2rem, 8vw, 3rem);
+    margin-bottom: 0.5rem;
+  }
+
+  .slide-content p {
+    font-size: clamp(1rem, 4vw, 1.2rem);
+  }
+
+  .slide-popeye {
+    width: 6rem;
+    height: 6rem;
   }
 }
 
@@ -284,6 +332,8 @@ section {
     flex-direction: column;
     justify-content: center;
     gap: 1rem;
+    top: 0;
+    height: 100svh;
   }
 
   .slide-content-2 {
@@ -295,6 +345,34 @@ section {
   .slide-musicman {
     width: 8rem;
     height: 8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .slide-container-2 {
+    gap: 0.5rem;
+    padding: 1rem;
+    top: 0;
+    height: 100svh;
+  }
+
+  .slide-content-2 {
+    max-width: 95%;
+    padding: 1.5rem;
+  }
+
+  .slide-content-2 h2 {
+    font-size: clamp(2rem, 8vw, 3rem);
+    margin-bottom: 0.5rem;
+  }
+
+  .slide-content-2 p {
+    font-size: clamp(1rem, 4vw, 1.2rem);
+  }
+
+  .slide-musicman {
+    width: 6rem;
+    height: 6rem;
   }
 }
 
@@ -369,5 +447,22 @@ section {
   .slide-tourists {
     width: 12rem;
     height: 12rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .slide-container-3 {
+    gap: 1rem;
+    padding: 0.5rem;
+  }
+
+  .thank-you-text {
+    font-size: clamp(3rem, 10vw, 6rem);
+    padding: 0 0.5rem;
+  }
+
+  .slide-tourists {
+    width: 8rem;
+    height: 8rem;
   }
 }

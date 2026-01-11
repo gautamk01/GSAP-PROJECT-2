@@ -30,11 +30,20 @@ function Hero() {
 
     if (!heroImg || !lottieContainer) return;
 
-    // Capture initial width on mount, but also valid to recalc if needed
-    let heroImgInitialwidth = heroImg.offsetWidth;
-    const heroImgTargetWidth = 300;
+    // Responsive target width calculation
+    const getTargetWidth = () => {
+      const vw = window.innerWidth;
+      // For mobile (< 480px): 150px, tablet (480-1000px): 200px, desktop: 300px
+      if (vw < 480) return 150;
+      if (vw < 1000) return 200;
+      return 300;
+    };
 
-    // Ensure we have a valid width, fallback or wait for load could be better but this is safe
+    // Capture initial width on mount
+    let heroImgInitialwidth = heroImg.offsetWidth;
+    let heroImgTargetWidth = getTargetWidth();
+
+    // Ensure we have a valid width
     if (heroImgInitialwidth === 0 && heroImg.naturalWidth > 0) {
       heroImgInitialwidth = heroImg.getBoundingClientRect().width;
     }
@@ -46,8 +55,9 @@ function Hero() {
       end: "top 30%",
       scrub: 1,
       onUpdate: (self) => {
-        // Recalculate width if it was 0 initially (lazy handling)
+        // Recalculate for responsive changes
         if (heroImgInitialwidth <= 0) heroImgInitialwidth = heroImg.offsetWidth;
+        heroImgTargetWidth = getTargetWidth();
 
         const heroImgCurrentWidth =
           heroImgInitialwidth -
@@ -56,14 +66,17 @@ function Hero() {
       },
     });
 
-    // Lottie animation scroll
+    // Lottie animation scroll with responsive offset
     ScrollTrigger.create({
       trigger: ".about",
       start: "top 30%",
       end: "bottom top",
       scrub: 1,
       onUpdate: (self) => {
-        const lottieOffset = self.progress * window.innerHeight * 1.1;
+        // Responsive offset multiplier - less movement on smaller screens
+        const offsetMultiplier = window.innerWidth < 768 ? 0.8 : 1.1;
+        const lottieOffset =
+          self.progress * window.innerHeight * offsetMultiplier;
 
         // Pause duck animation when it starts moving down
         isAnimationPaused.current = self.progress > 0;
@@ -89,7 +102,8 @@ function Hero() {
             const scrollDistance = self.scroll() - self.start;
             const pixelsPerFrame = 3;
             // Access totalFrames safely - check animationItem first
-            const totalFrames = lottieAnimation.animationItem.totalFrames || 100;
+            const totalFrames =
+              lottieAnimation.animationItem.totalFrames || 100;
 
             const frame =
               Math.floor(scrollDistance / pixelsPerFrame) % totalFrames;
