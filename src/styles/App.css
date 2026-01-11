@@ -92,7 +92,7 @@ section {
   position: relative;
   width: 10rem;
   height: 10rem;
-  transform: translateX(2rem);
+  transform: translateX(2.5rem);
   will-change: transform;
   z-index: 1;
 }
@@ -112,13 +112,29 @@ section {
   }
 
   .lottie-container .lottie {
-    width: 6rem;
-    height: 6rem;
-    transform: translateX(1rem);
+    width: 8rem;
+    height: 8rem;
+    transform: translateX(2rem);
   }
 
   .lottie-container .hero-img {
-    width: 100%;
+    width: 85%;
+  }
+}
+
+@media (max-width: 768px) {
+  .lottie-container {
+    padding: 1.25rem;
+  }
+
+  .lottie-container .lottie {
+    width: 6rem;
+    height: 6rem;
+    transform: translateX(1.5rem);
+  }
+
+  .lottie-container .hero-img {
+    width: 90%;
   }
 }
 
@@ -135,11 +151,11 @@ section {
   .lottie-container .lottie {
     width: 4rem;
     height: 4rem;
-    transform: translateX(0.5rem);
+    transform: translateX(1rem);
   }
 
   .lottie-container .hero-img {
-    width: 100%;
+    width: 95%;
   }
 }
 
